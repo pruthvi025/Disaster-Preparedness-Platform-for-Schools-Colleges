@@ -55,22 +55,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setState(defaultState)
   }
 
-  // persist in localStorage for demo purposes
+  // persist in localStorage for demo purposes (only on client)
   useEffect(() => {
-    try { 
-      localStorage.setItem('auth_state', JSON.stringify(state)) 
-    } catch {}
+    if (typeof window !== 'undefined') {
+      try { 
+        localStorage.setItem('auth_state', JSON.stringify(state)) 
+      } catch {}
+    }
   }, [state])
 
-  // Load from localStorage on mount
+  // Load from localStorage on mount (only on client)
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem('auth_state')
-      if (saved) {
-        const parsedState = JSON.parse(saved)
-        setState(parsedState)
-      }
-    } catch {}
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('auth_state')
+        if (saved) {
+          const parsedState = JSON.parse(saved)
+          setState(parsedState)
+        }
+      } catch {}
+    }
   }, [])
 
   const value = useMemo<AuthContextValue>(() => ({ ...state, setAuth, resetAuth, login, signup, logout }), [state])

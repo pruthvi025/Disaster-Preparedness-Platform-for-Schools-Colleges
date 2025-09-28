@@ -6,6 +6,7 @@ import { GovernmentHeader, GovernmentFooter } from '@/components/branding'
 import { AuthProvider } from '@/context/AuthContext'
 import NarratorGuide from '@/components/NarratorGuide'
 import BackgroundSwitcher from '@/components/BackgroundSwitcher'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -34,11 +35,13 @@ export default function RootLayout({
           </div>
           <BackgroundSwitcher />
           <GovernmentHeader />
-          <AuthProvider>
-            <main className="flex-1 backdrop-blur-[1px]/[var(--tw-blur)]">
-              {children}
-            </main>
-          </AuthProvider>
+          <ErrorBoundary>
+            <AuthProvider>
+              <main className="flex-1 backdrop-blur-[1px]/[var(--tw-blur)]">
+                {children}
+              </main>
+            </AuthProvider>
+          </ErrorBoundary>
           <NarratorGuide />
           <GovernmentFooter />
         </div>

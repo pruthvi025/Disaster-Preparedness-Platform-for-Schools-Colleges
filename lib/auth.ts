@@ -79,16 +79,16 @@ export const signOut = async (): Promise<void> => {
 
 export const getCurrentUser = (): User | null => {
   // In a real app, this would get user from localStorage/sessionStorage
-  const storedUser = typeof window !== 'undefined' ? localStorage.getItem('currentUser') : null;
+  if (typeof window === 'undefined') return null;
+  const storedUser = localStorage.getItem('currentUser');
   return storedUser ? JSON.parse(storedUser) : null;
 };
 
 export const setCurrentUser = (user: User | null): void => {
-  if (typeof window !== 'undefined') {
-    if (user) {
-      localStorage.setItem('currentUser', JSON.stringify(user));
-    } else {
-      localStorage.removeItem('currentUser');
-    }
+  if (typeof window === 'undefined') return;
+  if (user) {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+  } else {
+    localStorage.removeItem('currentUser');
   }
 };

@@ -1,11 +1,12 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useAuth } from '@/context/AuthContext'
 import { signInWithEmail, signUpWithEmail } from '@/lib/auth'
 import Select from '@/components/ui/Select'
+import LoadingSpinner from '@/components/LoadingSpinner'
 
 type Role = 'Student' | 'Teacher' | 'Admin'
 
@@ -54,6 +55,12 @@ export default function LoginPage() {
   const [zone, setZone] = useState('')
   const [district, setDistrict] = useState('')
   const [school, setSchool] = useState('')
+  const [isClient, setIsClient] = useState(false)
+
+  // Ensure we're on the client side
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   const selectedDistricts = useMemo(() => (zone ? districtData[zone] : []), [zone])
   const selectedSchools = useMemo(() => (district ? schoolData[district] : []), [district])
@@ -119,6 +126,15 @@ export default function LoginPage() {
 
   const googleSignIn = async () => {
     alert('Google sign-in not available in demo mode')
+  }
+
+  // Show loading state during SSR
+  if (!isClient) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center p-4">
+        <LoadingSpinner size="lg" text="Loading..." />
+      </div>
+    )
   }
 
   return (
