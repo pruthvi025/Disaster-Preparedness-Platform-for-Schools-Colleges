@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import Navigation from '@/components/Navigation'
 import Card from '@/components/ui/Card'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
@@ -103,7 +102,6 @@ export default function RegisterSchool() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-white">
-      <Navigation />
       <div className="flex items-center justify-center p-4 min-h-screen">
         <Card>
         {/* Header */}

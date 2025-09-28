@@ -7,6 +7,7 @@ import { AuthProvider } from '@/context/AuthContext'
 import NarratorGuide from '@/components/NarratorGuide'
 import BackgroundSwitcher from '@/components/BackgroundSwitcher'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
+import Navigation from '@/components/Navigation'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -24,7 +25,7 @@ export default function RootLayout({
     <html lang="en" className="overflow-x-hidden">
       <head></head>
       <body className={`${inter.className} overflow-x-hidden`}>
-        <div className="relative min-h-screen flex flex-col overflow-hidden pt-24">
+        <div className="relative min-h-screen flex flex-col overflow-hidden">
           {/* Animated gradient background */}
           <div className="pointer-events-none absolute inset-0 -z-20 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 animate-[gradientShift_12s_ease_infinite]" />
           {/* Soft glow blobs for depth */}
@@ -35,9 +36,10 @@ export default function RootLayout({
           </div>
           <BackgroundSwitcher />
           <GovernmentHeader />
+          <Navigation />
           <ErrorBoundary>
             <AuthProvider>
-              <main className="flex-1 backdrop-blur-[1px]/[var(--tw-blur)]">
+              <main className="flex-1 backdrop-blur-[1px]/[var(--tw-blur)] pt-32">
                 {children}
               </main>
             </AuthProvider>

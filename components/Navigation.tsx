@@ -25,7 +25,7 @@ export default function Navigation() {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className={`sticky top-0 z-50 w-full relative text-white transition-colors duration-500 ease-in-out`}
+      className={`fixed top-16 left-0 right-0 z-40 w-full text-white transition-colors duration-500 ease-in-out`}
     >
       <div className={`absolute inset-0 -z-10 ${bgClass}`} />
       {/* Scrolling motivational ticker behind navbar items */}
