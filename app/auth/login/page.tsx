@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useAuth } from '@/context/AuthContext'
-import { signInWithEmail, signUpWithEmail, signInWithGoogle } from '@/lib/auth-client'
+import { signInWithEmail, signUpWithEmail } from '@/lib/auth'
 import Select from '@/components/ui/Select'
 
 type Role = 'Student' | 'Teacher' | 'Admin'
@@ -74,16 +74,21 @@ export default function LoginPage() {
   const onSubmitLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      await signInWithEmail({ email: loginForm.email, password: loginForm.password })
-      setAuth({
-        role,
-        region,
-        zone,
-        district: role === 'Admin' ? '' : district,
-        schoolName: role === 'Admin' ? '' : (selectedSchool?.name || ''),
-        udiseCode: role === 'Admin' ? '' : (selectedSchool?.udise || ''),
-        schoolCategory: role === 'Admin' ? '' : (selectedSchool?.category || ''),
-      })
+      const user = await signInWithEmail(loginForm.email, loginForm.password)
+      if (user) {
+        setAuth({
+          role,
+          region,
+          zone,
+          district: role === 'Admin' ? '' : district,
+          schoolName: role === 'Admin' ? '' : (selectedSchool?.name || ''),
+          udiseCode: role === 'Admin' ? '' : (selectedSchool?.udise || ''),
+          schoolCategory: role === 'Admin' ? '' : (selectedSchool?.category || ''),
+        })
+        alert('Login successful!')
+      } else {
+        alert('Invalid credentials')
+      }
     } catch (err) {
       console.error(err)
       alert('Login failed')
@@ -93,16 +98,19 @@ export default function LoginPage() {
   const onSubmitSignup = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      await signUpWithEmail({ email: signupForm.email, password: signupForm.password, fullName: signupForm.name })
-      setAuth({
-        role,
-        region,
-        zone,
-        district: role === 'Admin' ? '' : district,
-        schoolName: role === 'Admin' ? '' : (selectedSchool?.name || ''),
-        udiseCode: role === 'Admin' ? '' : (selectedSchool?.udise || ''),
-        schoolCategory: role === 'Admin' ? '' : (selectedSchool?.category || ''),
-      })
+      const user = await signUpWithEmail(signupForm.email, signupForm.password, signupForm.name, role.toLowerCase())
+      if (user) {
+        setAuth({
+          role,
+          region,
+          zone,
+          district: role === 'Admin' ? '' : district,
+          schoolName: role === 'Admin' ? '' : (selectedSchool?.name || ''),
+          udiseCode: role === 'Admin' ? '' : (selectedSchool?.udise || ''),
+          schoolCategory: role === 'Admin' ? '' : (selectedSchool?.category || ''),
+        })
+        alert('Account created successfully!')
+      }
     } catch (err) {
       console.error(err)
       alert('Signup failed')
@@ -110,7 +118,7 @@ export default function LoginPage() {
   }
 
   const googleSignIn = async () => {
-    try { await signInWithGoogle() } catch (e) { console.error(e) }
+    alert('Google sign-in not available in demo mode')
   }
 
   return (

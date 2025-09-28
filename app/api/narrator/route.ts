@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSupabase } from '@/lib/supabase-server'
 
-// Direct OpenAI proxy with Supabase logging
+// Direct OpenAI proxy without database logging
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
@@ -48,12 +47,7 @@ export async function POST(req: NextRequest) {
     const data = await resp.json()
     const aiText: string = data?.choices?.[0]?.message?.content || ''
 
-    // Best-effort logging
-    try {
-      const supabase = getServerSupabase()
-      const q = query || (lastUser?.content ?? '')
-      await supabase.from('student_queries').insert({ query: q, response: aiText, session_id: sessionId || '' })
-    } catch {}
+    // Logging removed - no database dependency
 
     return NextResponse.json({ content: aiText })
   } catch (err: any) {
