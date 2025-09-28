@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
 import { useEffect, useMemo, useState } from 'react'
 import { schools } from '@/data/schools'
+import { signUpWithEmail } from '@/lib/auth'
 
 type Role = 'Student' | 'Teacher'
 
@@ -70,29 +71,37 @@ export default function SignupForm({ role }: { role: Role }) {
     setIsSubmitting(true)
     setError('')
     
-    // Mock signup - no database connection
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    try {
+      // Use our new auth system
+      const user = await signUpWithEmail(data.email, 'password123', data.fullName, role.toLowerCase())
+      
+      if (user) {
+        // Set auth context with user data
+        setAuth({
+          user: { 
+            name: data.fullName, 
+            email: data.email, 
+            mobile: data.mobile, 
+            age: data.age 
+          },
+          role: role.toLowerCase(),
+          district: data.district,
+          udiseCode: data.udiseCode,
+          schoolName: data.schoolName,
+          schoolCategory: data.schoolCategory,
+          zone: data.zone,
+          token: 'demo-token'
+        })
 
-    // Set auth context with mock data
-    setAuth({
-      user: { 
-        name: data.fullName, 
-        email: data.email, 
-        mobile: data.mobile, 
-        age: data.age 
-      },
-      role: role.toLowerCase(),
-      district: data.district,
-      udiseCode: data.udiseCode,
-      schoolName: data.schoolName,
-      schoolCategory: data.schoolCategory,
-      zone: data.zone,
-      token: 'demo-token'
-    })
-
-    // Redirect based on role
-    router.push(role === 'Student' ? '/student/dashboard' : '/teacher/dashboard')
+        // Redirect based on role
+        router.push(role === 'Student' ? '/student/dashboard' : '/teacher/dashboard')
+      } else {
+        setError('Signup failed. Please try again.')
+      }
+    } catch (err) {
+      setError('Signup failed. Please try again.')
+      console.error('Signup error:', err)
+    }
     
     setIsSubmitting(false)
   }

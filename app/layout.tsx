@@ -7,7 +7,6 @@ import { AuthProvider } from '@/context/AuthContext'
 import NarratorGuide from '@/components/NarratorGuide'
 import BackgroundSwitcher from '@/components/BackgroundSwitcher'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
-import Navigation from '@/components/Navigation'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -36,10 +35,9 @@ export default function RootLayout({
           </div>
           <BackgroundSwitcher />
           <GovernmentHeader />
-          <Navigation />
           <ErrorBoundary>
             <AuthProvider>
-              <main className="flex-1 backdrop-blur-[1px]/[var(--tw-blur)] pt-32">
+              <main className="flex-1 backdrop-blur-[1px]/[var(--tw-blur)] pt-16">
                 {children}
               </main>
             </AuthProvider>

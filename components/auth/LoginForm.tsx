@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
 import { useState } from 'react'
 import { Mail, Lock } from 'lucide-react'
+import { signInWithEmail } from '@/lib/auth'
 
 type Role = 'Student' | 'Teacher'
 
@@ -23,33 +24,36 @@ export default function LoginForm({ role }: { role: Role }) {
     setError('')
     setIsSubmitting(true)
     
-    // Mock authentication - no database connection
-    const validCredentials = 
-      (role === 'Student' && data.email === 'student@demo.com' && data.password === 'password123') ||
-      (role === 'Teacher' && data.email === 'teacher@demo.com' && data.password === 'password123')
-    
-    if (!validCredentials) {
-      setError('Invalid credentials. Please try again.')
-      setIsSubmitting(false)
-      return
-    }
+    try {
+      // Use our new auth system
+      const user = await signInWithEmail(data.email, data.password)
+      
+      if (user) {
+        // Set auth context with user data
+        setAuth({
+          user: { 
+            name: user.fullName, 
+            email: user.email,
+            mobile: '+91 98765 43210' // Default for demo
+          },
+          role: user.role,
+          token: 'demo-token'
+        })
 
-    // Set auth context with mock data
-    setAuth({
-      user: { 
-        name: role === 'Student' ? 'Mr.Rahul A. Jadhav' : 'Prof A.J.Patil', 
-        email: data.email,
-        mobile: role === 'Student' ? '+91 98765 43210' : '+91 98765 43211'
-      },
-      role: role.toLowerCase(),
-      token: 'demo-token'
-    })
-
-    // Redirect based on role
-    if (role === 'Student') {
-      router.push('/student/dashboard')
-    } else if (role === 'Teacher') {
-      router.push('/teacher/dashboard')
+        // Redirect based on role
+        if (user.role === 'student') {
+          router.push('/student/dashboard')
+        } else if (user.role === 'teacher') {
+          router.push('/teacher/dashboard')
+        } else if (user.role === 'admin') {
+          router.push('/admin/dashboard')
+        }
+      } else {
+        setError('Invalid credentials. Please try again.')
+      }
+    } catch (err) {
+      setError('Login failed. Please try again.')
+      console.error('Login error:', err)
     }
     
     setIsSubmitting(false)
