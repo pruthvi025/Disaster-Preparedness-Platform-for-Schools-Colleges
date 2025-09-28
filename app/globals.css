@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: system-ui, sans-serif;
+    @apply w-full min-h-screen overflow-x-hidden;
+  }
+  
+  body {
+    @apply w-full min-h-screen overflow-x-hidden bg-gray-50 text-gray-900;
+  }
+}
+
+/* Global animated gradient shift used by layout and hero */
+@keyframes gradientShift {
+  0% { filter: hue-rotate(0deg) saturate(1.05); }
+  50% { filter: hue-rotate(20deg) saturate(1.2); }
+  100% { filter: hue-rotate(0deg) saturate(1.05); }
+}
+
+@layer components {
+  .card {
+    @apply bg-white rounded-2xl shadow-sm border border-gray-200 p-8 max-w-md mx-auto;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors;
+  }
+  
+  .btn-primary {
+    @apply w-full bg-indigo-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors;
+  }
+  
+  .btn-secondary {
+    @apply w-full bg-gray-100 text-gray-700 py-3 px-6 rounded-lg font-medium hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors;
+  }
+}
+
+/* Radar Circle Animation */
+.radar-circle {
+  animation: radarPulse 2s infinite ease-in-out;
+}
+
+@keyframes radarPulse {
+  0% {
+    fill-opacity: 0.1;
+    stroke-width: 2;
+  }
+  50% {
+    fill-opacity: 0.3;
+    stroke-width: 4;
+  }
+  100% {
+    fill-opacity: 0.1;
+    stroke-width: 2;
+  }
+}
+
+/* School Marker Hover Effects */
+.custom-school-marker:hover {
+  transform: scale(1.1);
+  box-shadow: 0 12px 35px rgba(16, 185, 129, 0.6);
+}
